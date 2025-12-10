@@ -73,7 +73,7 @@ function App() {
                 className="bg-yellow-500 text-white px-3 py-1 rounded-md text-sm hover:bg-yellow-600 transition duration-150 ease-in-out"> 
                 Edit</button>
               )}
-              <button onClick={()=> deleteTask(task.id)} className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition duration-150 ease-in-out" >
+              <button onClick={()=>deleteTask(task.id)} className="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition duration-150 ease-in-out" >
                 Delete</button>
               </div>
             </li>
