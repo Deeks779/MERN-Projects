@@ -1,81 +1,116 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Toaster,toast } from 'react-hot-toast';
 
 function App() {
   const [password,setPassword]=useState("")
   const [req,setReq] =useState({
     plen : 8,
     upperCase :false,
-    lowerCase :true,
+    lowerCase :false,
     num: true,
-    symbol :true
+    symbol :false
   })
-
   const upper="QWERTYUIOPASDFGHJKLZXCVBNM"; 
   const lower="qwertyuiopasdfghjklzxcvbnm"
   const numbers="1234567890"
   const symbols="`~!@#$%^&*()_+-=[]{}|;:,./<>?"
   let allChars=""
-
-  
-
   const genratePassword=()=>{
     if(req.lowerCase) allChars+=lower
     if(req.num) allChars+=numbers
     if(req.symbol) allChars+=symbols
     if(req.upperCase) allChars+=upper
     if(req.lowerCase || req.num || req.upperCase || req.symbol){
-      let password=""
+      if(req.plen<8){
+      toast.error("Password length should be more than 8")
+      setPassword("")
+      }else if(req.plen>18){
+      toast.error("Password length should be less than 18")
+      setPassword("")
+      }else{
+        let password=""
       for (let i = 0; i < req.plen; i++) {
         password += allChars[Math.floor(Math.random() * allChars.length)];
       }
       setPassword(password)
+      }
     }else{
-      alert("Please select at least one option!")
+      toast.error("Please select at least one option!")
+      setPassword("")
     }
   }
-
+  useEffect(()=>{
+    genratePassword()
+  },[req])
   const copyPassword= async()=>{
     await navigator.clipboard.writeText(password);
-    alert("Password Copied!")
+    // alert("Password Copied!")
+    toast.success('Password Copied!', {
+      style: {
+        border: '1px solid #FFA2A2',
+        padding: '16px',
+        color: '#9D174D',
+      },
+      iconTheme: {
+        primary: '#FFA2A2',
+        secondary: '#FFF',
+      },
+    });
   }
 
   return (
-    <div className='max-w-xl mx-auto mt-10 p-8 bg-gray-900 text-white rounded-2xl shadow-2xl '>
-      <h1 className='text-3xl font-extrabold mb-8 text-center text-green-400'>Password Genrator</h1>
-      <div className='flex gap-4 mb-5'>
-      <input type="text" placeholder='Password is' value={password} className='grow p-3 bg-gray-800 border border-gray-700 rounded-lg text-lg font-mono focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-150'/>
-      <button onClick={()=>genratePassword()} className='px-5 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150'>Genrate</button>
-      <button onClick={()=>copyPassword()} className='px-5 py-3 border border-green-500 text-green-400 font-semibold rounded-lg hover:bg-green-500 hover:text-gray-900 transition duration-150'>Copy Password</button>
-      </div>
-      <div className='mb-8'>
-        <div className='flex justify items-center mb-2'>
-          <label className='text-gray-300 font-medium text-xl '>Password Length </label>
-          <span className='text-xl font-bold p-3 text-green-200'>{req.plen}</span>
-          <input type="range" min="1" max="50" value={req.plen} onChange={(e)=>setReq((prev)=>({...prev,plen:e.target.value}))} className='w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer range-lg accent-green-500 '/>
-
-        </div>
+    <>
+   <div class="bg-white p-8 max-w-lg mx-auto shadow-2xl rounded-xl border border-red-200 mt-10">
+    <h1 class="text-3xl font-bold mb-6 text-center text-red-600">Random Password Generator</h1>
     
-      <div className='flex flex-wrap gap-4 text-gray-300'>
-      <span className='font-medium w-full mb-2'>Include</span>
-      <label className='inline-flex items-center cursor-pointer'>
-      <input type="checkbox" checked={req.upperCase} onChange={(e)=>setReq((prev)=>({...prev,upperCase:e.target.checked}))} className='form-checkbox h-5 w-5 rounded-2xl border-gray-500 bg-gray-700 focus:ring-green-500 accent-green-500 '/> 
-      <span className='ml-2'>UpperCase</span>
-      </label>
-      <label className='inline-flex items-center cursor-pointer'>
-      <input type="checkbox" checked={req.lowerCase} onChange={(e)=>setReq((prev)=>({...prev,lowerCase:e.target.checked}))} className='form-checkbox h-5 w-5 rounded-2xl border-gray-500 bg-gray-700 focus:ring-green-500 accent-green-500 '/> 
-      <span className='ml-2'>LowerCase</span>
-      </label>
-      <label className='inline-flex items-center cursor-pointer'>
-      <input type="checkbox" checked={req.num} onChange={(e)=>setReq((prev)=>({...prev,num:e.target.checked}))} className='form-checkbox h-5 w-5 rounded-2xl border-gray-500 bg-gray-700 focus:ring-green-500 accent-green-500 '/> 
-      <span className='ml-2'>Number</span>
-      </label>
-      <label className='inline-flex items-center cursor-pointer'>
-      <input type="checkbox" checked={req.symbol} onChange={(e)=>setReq((prev)=>({...prev,symbol:e.target.checked}))} className='form-checkbox h-5 w-5 rounded-2xl border-gray-500 bg-gray-700 focus:ring-green-500 accent-green-500 '/> 
-      <span className='ml-2'>Symbols</span>
-      </label>
-      </div>
-      </div>
+    <div class="flex gap-2 mb-6">
+        <input type="text" placeholder='Password is' value={password} class="grow p-3 border border-red-300 rounded-lg bg-red-50 text-red-800 placeholder-red-400 font-mono text-lg" />
+        <button onClick={()=>genratePassword()} class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 ease-in-out whitespace-nowrap">
+            Generate
+        </button>
+        <button onClick={()=>copyPassword()} class="bg-red-400 hover:bg-red-500 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 ease-in-out whitespace-nowrap">
+            Copy
+        </button>
     </div>
+    
+    <div class="space-y-4">
+        <div class="flex items-center space-x-4">
+            <label class="text-red-800 font-medium whitespace-nowrap">Password Length </label>
+            <span class="text-xl font-bold text-red-600 w-8 text-center">{req.plen}</span>
+            <input type="range" min="1" max="50" value={req.plen} 
+                onChange={(e)=>setReq((prev)=>({...prev,plen:e.target.value}))} 
+                class="w-full h-2 bg-red-200 rounded-lg appearance-none cursor-pointer range-lg [&::-webkit-slider-thumb]:bg-red-600 [&::-moz-range-thumb]:bg-red-600"
+            />
+        </div>
+        <span class="text-red-800 font-medium mr-2">Include</span>
+        <div class="flex flex-wrap items-center gap-4 p-4 pt-4">            
+            <label class="flex items-center space-x-1 cursor-pointer">
+                <input type="checkbox" checked={req.upperCase} onChange={(e)=>setReq((prev)=>({...prev,upperCase:e.target.checked}))} class="form-checkbox text-red-600 bg-red-100 border-red-300 rounded-sm focus:ring-red-500" /> 
+                <span class="text-red-700">UpperCase</span>
+            </label>
+            
+            <label class="flex items-center space-x-1 cursor-pointer">
+                <input type="checkbox" checked={req.lowerCase} onChange={(e)=>setReq((prev)=>({...prev,lowerCase:e.target.checked}))} class="form-checkbox text-red-600 bg-red-100 border-red-300 rounded-sm focus:ring-red-500" /> 
+                <span class="text-red-700">LowerCase</span>
+            </label>
+            
+            <label class="flex items-center space-x-1 cursor-pointer">
+                <input type="checkbox" checked={req.num} onChange={(e)=>setReq((prev)=>({...prev,num:e.target.checked}))} class="form-checkbox text-red-600 bg-red-100 border-red-300 rounded-sm focus:ring-red-500" /> 
+                <span class="text-red-700">Number</span>
+            </label>
+            
+            <label class="flex items-center space-x-1 cursor-pointer">
+                <input type="checkbox" checked={req.symbol} onChange={(e)=>setReq((prev)=>({...prev,symbol:e.target.checked}))} class="form-checkbox text-red-600 bg-red-100 border-red-300 rounded-sm focus:ring-red-500" /> 
+                <span class="text-red-700">Symbols</span>
+            </label>
+        </div>
+    </div>
+</div>
+<Toaster
+  position="bottom-right"
+  reverseOrder={false}
+/>
+</>
   )
 }
 
